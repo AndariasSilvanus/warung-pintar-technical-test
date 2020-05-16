@@ -28,14 +28,21 @@ export const PokemonContainer = ({ children }) => {
   ] = useReducer(dataReducer, dataInitialState);
 
   // methods
-  const handleSelectChange = async (type, idx) => {
-    const [data, error] = await fetchPokemonListByType(type);
-    if (data) {
-      dataDispatch({
-        type: DATA_ACTION_TYPE.REPLACE_LIST,
-        data: data.pokemon.map((e) => e.pokemon),
-      });
-      dataDispatch({ type: DATA_ACTION_TYPE.RESET_OFFSET });
+  const handleSelectChange = async (option, idx) => {
+    if (option !== null) {
+      const { value } = option;
+      const [data, error] = await fetchPokemonListByType(value);
+      if (data) {
+        dataDispatch({
+          type: DATA_ACTION_TYPE.REPLACE_LIST,
+          data: data.pokemon.map((e) => e.pokemon),
+        });
+        dataDispatch({
+          type: DATA_ACTION_TYPE.UPDATE_FILTER_OPTION,
+          data: option,
+        });
+        dataDispatch({ type: DATA_ACTION_TYPE.RESET_OFFSET });
+      }
     }
   };
 

@@ -36,8 +36,8 @@ export const Select = ({
 
   const handleChange = (event) => {
     const idx = options.findIndex((e) => e.value === event.target.value);
-    const value = idx !== -1 ? options[idx].value : null;
-    onChange(value, idx);
+    const option = idx !== -1 ? options[idx] : null;
+    onChange(option, idx);
   };
 
   return (
