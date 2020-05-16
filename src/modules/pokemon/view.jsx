@@ -5,6 +5,9 @@ import { Modal } from "../../components/modal/modal";
 import { PokemonCard } from "../../components/pokemon-card/pokemon-card";
 import { PokemonTextThumbnail } from "../../components/pokemon-text-thumbnail/pokemon-text-thumbnail";
 import { getUrlValue } from "../../utils/getUrlValue";
+import styled from "@emotion/styled";
+import { capitalize } from "@material-ui/core";
+import { FILTER_OPTION_DEFAULT_VALUE, initialFilterOption } from "./const";
 
 const PokemonType = T.shape({ name: T.string, url: T.string });
 const propTypes = {
@@ -20,6 +23,10 @@ const propTypes = {
   updateOffset: T.func,
 };
 
+const CenterBox = styled.div`
+  text-align: center;
+`;
+
 const INFINITE_SCROLL_PADDING_NUMBER = 100;
 export const PokemonView = ({
   openModal,
@@ -33,10 +40,12 @@ export const PokemonView = ({
   handlePokemonDetailClosed,
   updateOffset,
 }) => {
-  const selectOptions = pokemonTypes.map((e) => ({
-    value: getUrlValue(e.url),
-    label: e.name,
-  }));
+  const selectOptions = [initialFilterOption].concat(
+    pokemonTypes.map((e) => ({
+      value: getUrlValue(e.url),
+      label: e.name,
+    }))
+  );
 
   const handleScroll = () => {
     if (
@@ -55,41 +64,66 @@ export const PokemonView = ({
   }, []);
 
   return (
-    <div>
+    <CenterBox>
       <Select
         options={selectOptions}
         onChange={handleSelectChange}
         selectedOption={selectedFilterOption}
         label="Filter by types"
       />
-      {list.map((e, i) => (
-        <PokemonTextThumbnail
-          text={e.name}
-          onClick={() => handlePokemonThumbnailClicked(getUrlValue(e.url))}
-        />
-      ))}
+      <div>
+        {list.map((e, i) => {
+          const pokemonNumber = getUrlValue(e.url);
+          const upperCaseName = capitalize(e.name);
+          return (
+            <PokemonTextThumbnail
+              text={`${upperCaseName} (#${pokemonNumber})`}
+              onClick={() => handlePokemonThumbnailClicked(pokemonNumber)}
+            />
+          );
+        })}
+      </div>
       <PokemonDetailSection
         openModal={openModal}
         handlePokemonDetailClosed={handlePokemonDetailClosed}
         detail={detail}
       />
-    </div>
+    </CenterBox>
   );
 };
+
+const AbsoluteCenterBox = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
 
 const PokemonDetailSection = ({
   openModal,
   handlePokemonDetailClosed,
   detail,
 }) => {
-  console.log("detaill", detail);
   if (detail) {
     const {
       sprites: { front_default },
+      name,
+      types,
+      abilities,
     } = detail;
+
+    const transformedTypes = types.map((e) => e.type.name);
+    const transformedAbilities = abilities.map((e) => e.ability.name);
     return (
       <Modal isOpen={openModal} handleClose={handlePokemonDetailClosed}>
-        <PokemonCard image={front_default} />
+        <AbsoluteCenterBox>
+          <PokemonCard
+            image={front_default}
+            name={capitalize(name)}
+            types={transformedTypes}
+            abilities={transformedAbilities}
+          />
+        </AbsoluteCenterBox>
       </Modal>
     );
   }
