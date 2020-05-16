@@ -8,6 +8,7 @@ import { getUrlValue } from "../../utils/getUrlValue";
 
 const propTypes = {};
 
+const INFINITE_SCROLL_PADDING_NUMBER = 100;
 export const PokemonView = ({
   openModal,
   list,
@@ -27,11 +28,13 @@ export const PokemonView = ({
 
   const handleScroll = () => {
     if (
-      window.innerHeight + document.documentElement.scrollTop !==
+      window.innerHeight +
+        document.documentElement.scrollTop +
+        INFINITE_SCROLL_PADDING_NUMBER >=
       document.documentElement.offsetHeight
-    )
-      return;
-    updateOffset();
+    ) {
+      updateOffset();
+    }
   };
 
   useEffect(() => {
