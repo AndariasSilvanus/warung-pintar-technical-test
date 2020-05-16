@@ -1,5 +1,5 @@
 import produce from "immer";
-import { initialFilterOption } from "./const";
+import { initialFilterOption, FETCH_LIST_OFFSET } from "./const";
 
 export const UI_ACTION_TYPE = {
   UPDATE_MODAL: "UPDATE_MODAL",
@@ -55,7 +55,7 @@ export const dataReducer = produce((draft, action) => {
       draft.detail = null;
       break;
     case DATA_ACTION_TYPE.UPDATE_OFFSET:
-      draft.offset += action.data ? action.data : 20;
+      draft.offset += action.data ? action.data : FETCH_LIST_OFFSET;
       break;
     case DATA_ACTION_TYPE.RESET_OFFSET:
       draft.offset = 0;
