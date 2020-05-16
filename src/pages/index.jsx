@@ -1,1 +1,3 @@
-export default () => <h1>hello world</h1>;
+import ListPage from "../modules/pokemon";
+
+export default ListPage;
