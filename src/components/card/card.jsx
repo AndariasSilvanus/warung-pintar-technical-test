@@ -4,7 +4,7 @@ import MaterialUICard from "@material-ui/core/Card";
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 275,
+    minWidth: 350,
   },
   bullet: {
     display: "inline-block",
@@ -19,10 +19,14 @@ const useStyles = makeStyles({
   },
 });
 
-export const Card = ({ children }) => {
+export const Card = ({ children, ...props }) => {
   const classes = useStyles();
 
-  return <MaterialUICard className={classes.root}>{children}</MaterialUICard>;
+  return (
+    <MaterialUICard className={classes.root} {...props}>
+      {children}
+    </MaterialUICard>
+  );
 };
 
 export default Card;
