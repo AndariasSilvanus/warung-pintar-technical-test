@@ -1,4 +1,5 @@
 import produce from "immer";
+import { initialFilterOption } from "./const";
 
 export const UI_ACTION_TYPE = {
   UPDATE_MODAL: "UPDATE_MODAL",
@@ -30,7 +31,7 @@ export const dataInitialState = {
   offset: 0,
   limit: 0,
   detail: null,
-  selectedFilterOption: null,
+  selectedFilterOption: initialFilterOption,
   pokemonTypes: [],
 };
 export const dataReducer = produce((draft, action) => {
@@ -45,7 +46,7 @@ export const dataReducer = produce((draft, action) => {
       draft.selectedFilterOption = action.data;
       break;
     case DATA_ACTION_TYPE.RESET_FILTER_OPTION:
-      draft.selectedFilterOption = null;
+      draft.selectedFilterOption = initialFilterOption;
       break;
     case DATA_ACTION_TYPE.UPDATE_POKEMON_DETAIL:
       draft.detail = action.data;

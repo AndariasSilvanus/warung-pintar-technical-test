@@ -8,6 +8,7 @@ import {
   dataReducer,
   uiReducer,
 } from "./reducer";
+import { FILTER_OPTION_DEFAULT_VALUE, initialFilterOption } from "./const";
 
 async function fetchPokemonDetail(pokemon) {
   const [data, error] = await pokeService.getPokemonData(pokemon);
@@ -17,6 +18,16 @@ async function fetchPokemonDetail(pokemon) {
 async function fetchPokemonListByType(type) {
   const [data, error] = await pokeService.getPokemonListByType(type);
   return [data, error];
+}
+
+async function fetchPokemonList(dataDispatch, type, limit, offset) {
+  const [data, error] = await pokeService.getPokemonList(limit, offset);
+  if (data) {
+    dataDispatch({
+      type,
+      data: data.results,
+    });
+  }
 }
 
 export const PokemonContainer = ({ children }) => {
@@ -29,7 +40,7 @@ export const PokemonContainer = ({ children }) => {
 
   // methods
   const handleSelectChange = async (option, idx) => {
-    if (option !== null) {
+    if (option && option.value !== FILTER_OPTION_DEFAULT_VALUE) {
       const { value } = option;
       const [data, error] = await fetchPokemonListByType(value);
       if (data) {
@@ -43,6 +54,18 @@ export const PokemonContainer = ({ children }) => {
         });
         dataDispatch({ type: DATA_ACTION_TYPE.RESET_OFFSET });
       }
+    } else if (option && option.value === FILTER_OPTION_DEFAULT_VALUE) {
+      dataDispatch({
+        type: DATA_ACTION_TYPE.UPDATE_FILTER_OPTION,
+        data: initialFilterOption,
+      });
+      dataDispatch({ type: DATA_ACTION_TYPE.RESET_OFFSET });
+      fetchPokemonList(
+        dataDispatch,
+        DATA_ACTION_TYPE.REPLACE_LIST,
+        limit,
+        offset
+      );
     }
   };
 
@@ -56,6 +79,7 @@ export const PokemonContainer = ({ children }) => {
 
   const handlePokemonDetailClosed = () => {
     uiDispatch({ type: UI_ACTION_TYPE.UPDATE_MODAL, data: false });
+    dataDispatch({ type: DATA_ACTION_TYPE.UPDATE_POKEMON_DETAIL, data: null });
   };
 
   const updateOffset = () => {
@@ -64,16 +88,14 @@ export const PokemonContainer = ({ children }) => {
 
   // lifecycle
   useEffect(() => {
-    async function fetchPokemonList() {
-      const [data, error] = await pokeService.getPokemonList(limit, offset);
-      if (data) {
-        dataDispatch({
-          type: DATA_ACTION_TYPE.APPEND_LIST,
-          data: data.results,
-        });
-      }
+    if (selectedFilterOption.value === FILTER_OPTION_DEFAULT_VALUE) {
+      fetchPokemonList(
+        dataDispatch,
+        DATA_ACTION_TYPE.APPEND_LIST,
+        limit,
+        offset
+      );
     }
-    fetchPokemonList();
   }, [offset]);
 
   useEffect(() => {
