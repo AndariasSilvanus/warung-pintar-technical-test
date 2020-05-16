@@ -6,7 +6,19 @@ import { PokemonCard } from "../../components/pokemon-card/pokemon-card";
 import { PokemonTextThumbnail } from "../../components/pokemon-text-thumbnail/pokemon-text-thumbnail";
 import { getUrlValue } from "../../utils/getUrlValue";
 
-const propTypes = {};
+const PokemonType = T.shape({ name: T.string, url: T.string });
+const propTypes = {
+  openModal: T.bool,
+  list: T.arrayOf(PokemonType),
+  detail: T.any,
+  selectedFilterOption: OptionType,
+  pokemonTypes: T.arrayOf(PokemonType),
+
+  handleSelectChange: T.func,
+  handlePokemonThumbnailClicked: T.func,
+  handlePokemonDetailClosed: T.func,
+  updateOffset: T.func,
+};
 
 const INFINITE_SCROLL_PADDING_NUMBER = 100;
 export const PokemonView = ({
