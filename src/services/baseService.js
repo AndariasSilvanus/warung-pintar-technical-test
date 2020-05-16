@@ -8,7 +8,7 @@ export class BaseService {
     if (error) {
       throw new Error(error);
     }
-    return [result, error];
+    return [{ data: result.data, status: result.status }, error];
   }
 
   async get(url, query, config = {}) {
@@ -20,6 +20,6 @@ export class BaseService {
     if (error) {
       throw new Error(error);
     }
-    return [result, error];
+    return [{ data: result.data, status: result.status }, error];
   }
 }
