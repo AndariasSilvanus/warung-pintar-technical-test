@@ -25,6 +25,8 @@ const propTypes = {
 
 const CenterBox = styled.div`
   text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
 `;
 
 const INFINITE_SCROLL_PADDING_NUMBER = 100;

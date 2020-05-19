@@ -29,7 +29,7 @@ export const DATA_ACTION_TYPE = {
 export const dataInitialState = {
   list: [],
   offset: 0,
-  limit: 0,
+  limit: FETCH_LIST_OFFSET,
   detail: null,
   selectedFilterOption: initialFilterOption,
   pokemonTypes: [],
